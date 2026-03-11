@@ -407,6 +407,8 @@ def process_message(event, client, say):
     user_id = event.get("user", "")
     channel = event.get("channel", "")
     text = event.get("text", "").strip()
+    # Strip @mentions so "@Adriana Neurostim" works same as "Neurostim"
+    text = re.sub(r'<@[A-Z0-9]+>', '', text).strip()
     text_lower = text.lower()
 
     if not is_authorized(user_id):
