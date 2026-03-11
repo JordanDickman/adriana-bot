@@ -416,6 +416,12 @@ def process_message(event, client, say):
 
     state = conversation_state.get(channel, {})
 
+    # Cancel command works at any stage
+    if text_lower in ["cancel", "stop", "reset", "quit", "@adriana cancel", "cancel"]:
+        conversation_state.pop(channel, None)
+        say("Cancelled. Type *@Adriana Neurostim*, *@Adriana Sunrun*, or *@Adriana BTC* to start a new analysis.")
+        return
+
     if state.get("stage") == "awaiting_copy_confirm":
         if text_lower in ["yes", "y", "yeah", "yep", "sure", "yes please"]:
             conversation_state[channel]["stage"] = "awaiting_platform"
