@@ -387,8 +387,20 @@ def is_authorized(user_id: str) -> bool:
     return user_id in authorized
 
 
+@slack_app.event("app_mention")
+def handle_mention(event, client, say):
+    """Handle @Adriana mentions."""
+    process_message(event, client, say)
+
+
 @slack_app.event("message")
 def handle_message(event, client, say):
+    if event.get("bot_id") or event.get("subtype"):
+        return
+    process_message(event, client, say)
+
+
+def process_message(event, client, say):
     if event.get("bot_id") or event.get("subtype"):
         return
 
