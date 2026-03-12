@@ -540,7 +540,22 @@ def process_message(event, client, say):
         trends = fetch_trends_data(triggered_client)
 
         recent, historical = split_data_by_period(all_youtube)
-        say(f"_Analyzing {len(recent)} recent and {len(historical)} historical data points with AI..._")
+
+        yt_recent_videos = len([x for x in recent if x.get("type") == "video"])
+        yt_recent_comments = len([x for x in recent if x.get("type") == "comment"])
+        yt_hist_videos = len([x for x in historical if x.get("type") == "video"])
+        yt_hist_comments = len([x for x in historical if x.get("type") == "comment"])
+        rising_count = len(trends.get("rising_queries", []))
+        trends_kw_count = len(trends.get("trend_data", {}))
+
+        summary = (
+            f"_Here\'s what I found before running the analysis:_\n"
+            f"• *Last 30 days:* {yt_recent_videos} YouTube videos + {yt_recent_comments} comments\n"
+            f"• *Prior 6 months:* {yt_hist_videos} YouTube videos + {yt_hist_comments} comments\n"
+            f"• *Google Trends:* {trends_kw_count} keywords tracked, {rising_count} rising queries detected\n"
+            f"_Running AI analysis now..._"
+        )
+        say(summary)
 
         messages = analyze_with_claude(triggered_client, recent, historical, trends)
 
