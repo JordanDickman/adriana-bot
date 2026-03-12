@@ -416,6 +416,45 @@ def process_message(event, client, say):
 
     state = conversation_state.get(channel, {})
 
+    # Sources command — show example data points from the last analysis
+    if text_lower in ["sources", "show sources", "examples", "show examples"]:
+        if not state or "raw_recent" not in state:
+            say("No analysis found. Run an analysis first by typing *@Adriana Neurostim*, *@Adriana Sunrun*, or *@Adriana BTC*.")
+            return
+        try:
+            lines = ["*📎 EXAMPLE DATA POINTS FROM THIS ANALYSIS*", "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"]
+            
+            yt_items = [x for x in state["raw_recent"] + state["raw_historical"] if x.get("platform") == "YouTube"][:6]
+            if yt_items:
+                lines.append("\n*📺 YOUTUBE EXAMPLES:*")
+                for item in yt_items[:3]:
+                    item_type = "Comment" if item.get("type") == "comment" else "Video"
+                    lines.append(f"• *[YouTube {item_type} — {item.get('date','')}]*")
+                    lines.append(f"  _{item.get('title','')[:80]}_")
+                    if item.get("text"):
+                        lines.append(f"  "{item['text'][:200]}"")
+
+            trends = state.get("trends", {})
+            rising = trends.get("rising_queries", [])
+            trend_data = trends.get("trend_data", {})
+            if rising or trend_data:
+                lines.append("\n*📈 GOOGLE TRENDS EXAMPLES:*")
+                if rising:
+                    lines.append(f"• *Rising search queries detected:*")
+                    for q in rising[:3]:
+                        lines.append(f"  ↑ "{q}"")
+                if trend_data:
+                    for kw, data in list(trend_data.items())[:3]:
+                        direction = "▲" if data["direction"] == "up" else ("▼" if data["direction"] == "down" else "→")
+                        lines.append(f"• *"{kw}"* — {direction} {data['direction']} (recent avg: {data['recent_avg']} vs prior: {data['historical_avg']})")
+
+            lines.append("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            lines.append("_All data sourced from public YouTube videos/comments and Google Trends (US only)_")
+            say("\n".join(lines))
+        except Exception as e:
+            say(f"Error retrieving sources: `{str(e)}`")
+        return
+
     # Cancel command works at any stage
     if text_lower in ["cancel", "stop", "reset", "quit", "@adriana cancel", "cancel"]:
         conversation_state.pop(channel, None)
@@ -512,7 +551,10 @@ def process_message(event, client, say):
         conversation_state[channel] = {
             "stage": "awaiting_copy_confirm",
             "client_key": triggered_client,
-            "analysis": "\n\n".join(messages)
+            "analysis": "\n\n".join(messages),
+            "raw_recent": recent[:9],
+            "raw_historical": historical[:6],
+            "trends": trends
         }
 
         time.sleep(1)
