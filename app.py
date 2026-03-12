@@ -432,7 +432,7 @@ def process_message(event, client, say):
                     lines.append(f"• *[YouTube {item_type} — {item.get('date','')}]*")
                     lines.append(f"  _{item.get('title','')[:80]}_")
                     if item.get("text"):
-                        lines.append(f"  "{item['text'][:200]}"")
+                        lines.append("  \"" + item["text"][:200] + "\"")
 
             trends = state.get("trends", {})
             rising = trends.get("rising_queries", [])
@@ -442,11 +442,11 @@ def process_message(event, client, say):
                 if rising:
                     lines.append(f"• *Rising search queries detected:*")
                     for q in rising[:3]:
-                        lines.append(f"  ↑ "{q}"")
+                        lines.append("  ↑ \"" + q + "\"")
                 if trend_data:
                     for kw, data in list(trend_data.items())[:3]:
                         direction = "▲" if data["direction"] == "up" else ("▼" if data["direction"] == "down" else "→")
-                        lines.append(f"• *"{kw}"* — {direction} {data['direction']} (recent avg: {data['recent_avg']} vs prior: {data['historical_avg']})")
+                        lines.append("• *\"" + kw + "\"* — " + direction + " " + data["direction"] + " (recent avg: " + str(data["recent_avg"]) + " vs prior: " + str(data["historical_avg"]) + ")")
 
             lines.append("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
             lines.append("_All data sourced from public YouTube videos/comments and Google Trends (US only)_")
