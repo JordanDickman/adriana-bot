@@ -72,6 +72,30 @@ CLIENTS = {
         ],
         "trends_keywords": ["Sunrun", "home solar panels", "solar battery storage", "residential solar"]
     },
+    "bhl": {
+        "name": "Blake Harris Law",
+        "trigger": "bhl",
+        "website": "https://blakeharrislaw.com/",
+        "services": ["Offshore Asset Protection", "Cook Islands Trust"],
+        "platforms": ["Google Ads"],
+        "states": ["United States"],
+        "competitor_note": "Competitors are other offshore asset protection law firms and domestic asset protection trust attorneys. Blake Harris Law differentiates as the largest firm exclusively focused on offshore asset protection, with Blake Harris being a nationally recognized authority quoted in Forbes, ABC, NBC, CBS, and Fox News.",
+        "search_queries": [
+            "offshore asset protection trust",
+            "Cook Islands trust attorney",
+            "how to protect assets from lawsuits",
+            "offshore trust US citizens",
+            "asset protection for high net worth",
+            "best asset protection strategy",
+            "Cook Islands trust cost",
+            "offshore trust vs domestic trust",
+            "asset protection for doctors",
+            "asset protection for entrepreneurs",
+            "lawsuit protection wealth",
+            "protect assets from divorce"
+        ],
+        "trends_keywords": ["offshore asset protection", "Cook Islands trust", "asset protection trust", "protect assets from lawsuit"]
+    },
     "btc": {
         "name": "Big Think Capital",
         "trigger": "btc",
